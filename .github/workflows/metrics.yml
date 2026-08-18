@@ -1,0 +1,32 @@
+name: Generate Metrics
+on:
+  schedule: [{cron: "0 0 * * *"}]
+  workflow_dispatch:
+  push: {branches: ["main"]}
+
+jobs:
+  github-metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate GitHub Metrics SVG
+        uses: lowlighter/metrics@latest
+        with:
+          filename: github-metrics.svg
+          token: ${{ secrets.METRICS_TOKEN }}
+          
+          # Базовая статистика профиля
+          base: header, activity, community, repositories, metadata
+          config_timezone: Europe/London
+          
+          # 1. Плагин для подсчета строк кода
+          plugin_lines: yes
+          
+          # 2. Плагин для языков программирования (считывается из кода автоматически)
+          plugin_languages: yes
+          plugin_languages_details: percentage
+          plugin_languages_limit: 8
+          
+          # 3. Плагин для библиотек и технологий (считывается из тегов репозиториев)
+          plugin_topics: yes
+          plugin_topics_mode: icons
+          plugin_topics_limit: 15
