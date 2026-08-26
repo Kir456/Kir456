@@ -14,19 +14,33 @@ jobs:
           filename: github-metrics.svg
           token: ${{ secrets.METRICS_TOKEN }}
           
-          # Базовая статистика профиля
+          # 1. Расширяем лимит и области поиска репозиториев
+          repositories: 1000
+          # Включаем свои репозитории, те, где вы collaborator, и репозитории ваших организаций
+          repositories_affiliations: owner, collaborator, organization_member
+          
           base: header, activity, community, repositories, metadata
           config_timezone: Europe/London
           
-          # 1. Плагин для подсчета строк кода
+          # 2. Плагин строк кода (считает за все время и по всем доступным репозиториям)
           plugin_lines: yes
+          plugin_lines_history_limit: 0 
           
-          # 2. Плагин для языков программирования (считывается из кода автоматически)
+          # 3. Плагин языков с ГЛУБОКИМ анализом (Indepth mode)
           plugin_languages: yes
           plugin_languages_details: lines, percentage
           plugin_languages_limit: 8
           
-          # 3. Плагин для библиотек и технологий (считывается из тегов репозиториев)
+          # Включаем глубокий анализ: плагин будет клонировать репы и искать ваши коммиты
+          plugin_languages_indepth: yes
+          # Укажите через запятую ваши логины и email, с которых вы делали коммиты
+          commits_authoring: Kir456, kiregorov456@gmail.com
+          
+          # (Опционально) Если вы контрибьютили в крупные чужие open-source проекты 
+          # как сторонний разработчик (не коллаборатор), их нужно указать вручную:
+          # plugin_languages_indepth_custom: facebook/react, torvalds/linux
+          
+          # 4. Плагин топиков
           plugin_topics: yes
           plugin_topics_mode: icons
           plugin_topics_limit: 15
